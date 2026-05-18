@@ -1,0 +1,178 @@
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+# 1. Remover los objetos
+rm(list = ls())
+# 2. Instalar paquetes
+#install.packages("data.table",
+#   dependencies = T)
+library(data.table)
+# 3. Descargar tablas de datos
+pop <- fread("https://repodatos.atdt.gob.mx/CONAPO/proyecciones/00_Pob_Mitad_1950_2070.csv")
+# 1. Remover los objetos
+rm(list = ls())
+# 2. Instalar paquetes
+#install.packages("data.table",
+#   dependencies = T)
+library(data.table)
+# 3. Descargar tablas de datos
+pop <- fread("https://repodatos.atdt.gob.mx/CONAPO/proyecciones/00_Pob_Mitad_1950_2070.csv")
+# 1. Remover los objetos
+rm(list = ls())
+# 2. Instalar paquetes
+#install.packages("data.table",
+#   dependencies = T)
+library(data.table)
+# 3. Descargar tablas de datos
+pop <- fread("https://repodatos.atdt.gob.mx/CONAPO/proyecciones/00_Pob_Mitad_1950_2070.csv")
+# 4. Exploración de la tabla de población
+table(pop$ENTIDAD)
+table(pop$CVE_GEO)
+table(pop$ANIO)
+names(pop)
+sum(pop$POBLACION)
+tinytex::install_tinytex()
+{r}
+pop[ENTIDAD=="CDMX" &ANIO=="2026",
+.(SEXO, EDAD, POBLACION)]
+```{r}
+pop[ENTIDAD=="Ciudad de México" &ANIO=="2026",
+list(SEXO, EDAD, POBLACION)]
+pop[ENTIDAD=="Ciudad de México" &ANIO=="2026",
+list(SEXO, EDAD, POBLACION)]
+```{r}
+pop[ENTIDAD=="Ciudad de México" &ANIO=="2026",
+list(SEXO, EDAD, POBLACION)]
+pop[ENTIDAD=="Ciudad de México" &ANIO=="2026", list(SEXO, EDAD, POBLACION)]
+```{r}
+---
+title: "Informe"
+pop[ENTIDAD=="Ciudad de Mexico" &ANIO=="2026",
+list(SEXO, EDAD, POBLACION)]
+install.packages("KableExtra", dependencies = T)
+#library(data.table)
+library(kableExtra)
+weighted_mean <- function(x, w=1/length(x)){
+x_mean <- (x*w)/sum(w)
+return(x_mean)
+}
+weight_mean(1:10)
+weight_mean <- function(x, w=1/length(x)){
+x_mean <- (x*w)/sum(w)
+return(x_mean)
+}
+weight_mean(1:10)
+weight_mean <- function(x, w=1/length(x)){
+x_mean <- sum(x*w)/sum(w)
+return(x_mean)
+}
+weight_mean(1:10)
+weight_mean <- function(x, w=rep(1/length(x), length(x)){
+weight_mean <- function(x, w=rep(1/length(x), length(x))){
+x_mean <- sum(x*w)/sum(w)
+return(x_mean)
+}
+weight_mean(1:10)
+weight_mean <- function(x,
+w=rep(1/length(x),
+length(x))){
+x_mean <- sum(x*w)/sum(w)
+return(x_mean)
+}
+weight_mean(1:10)
+weight_mean <- function(x,
+w=rep(1/length(x),
+length(x))){
+x_mean <- sum(x*w)/sum(w)
+return(x_mean)
+}
+# Ejemplo
+weight_mean(c(10,40), c(0.3, 0.7))
+weight_mean <- function(x,
+w=rep(1/length(x),
+length(x))){
+x_mean <- sum(x*w)/sum(w)
+return(x_mean)
+}
+# Ejemplo
+weight_mean(c(10,40), c(0.3, 0.7)) #Ejemplo con pesos
+weight_mean(c(10,40)) #Ejemplo sin pesos
+install.packages("lubridate", dependencies = T)
+#library(data.table)
+library(lubridate)
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) %>% ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) > ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+library(ggplot)
+library(ggplot2)
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) > ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) > ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame{(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) > ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) > ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+library(ggplot2)
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")), decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)), N_t = c(112336538, 126014024, cre_exp)) %>% ggplot(aes(Año, N_t)) + geom_line() + geom_point()
+library(ggplot2)
+library(data.table)
+# 3. Crecimiento exponencial ----
+expo <- function(N_0, N_T, t_0, t_T, t){
+dt <- decimal_date(as.Date(t_T)) - decimal_date(as.Date(t_0))
+r <- log(N_T/N_0)/dt
+h <- t - decimal_date(as.Date(t_0))
+N_h <- N_0 * exp(r*h)
+return(N_h) }
+cre_exp <- expo( N_0=112336538, N_T=126014024, t_0="2010-06-25", t_T="2020-03-15", t=seq(2020.5, 2100.5, 1) )
+# Gráfica
+data.frame(Año = c(decimal_date(as.Date("2010-06-25")),
+decimal_date(as.Date("2020-03-15")), seq(2020.5, 2100.5, 1)),
+N_t = c(112336538, 126014024, cre_exp)) %>%
+ggplot(aes(Año, N_t)) +
+geom_line() + g<
+eom_point()
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("tidyverse")

@@ -1,0 +1,2 @@
+"0","#con () al principio y al final me muestra el objeto (los datos del interior)"
+"0","kable(deaths, caption = ""Muertes de Argentina y Guatemala"")"
