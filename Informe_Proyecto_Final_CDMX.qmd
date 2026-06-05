@@ -901,11 +901,39 @@ print(comparativa_ex)
 
 ## Esperanza de vida al nacer y probabilidad de morir con y sin homicidios, por sexo.
 
+La inseguridad en la CDMX no se experimenta de la misma manera; hombres y mujeres transitan la ciudad bajo miedos, riesgos y códigos de supervivencia completamente distintos. Mientras que para ellos el peligro suele estar más asociado a la violencia física y patrimonial, para ellas está atravesado por la violencia sexual y el control del espacio.
+
 ![Probabilidades de morir para las mujeres de CDMX con y sin homicidio como causa de muerte.](images/Probabilidad%20de%20morir%20muejeres%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
+
+**Mujeres:**
+
+-   Violencia sexual y acoso constante: El transporte público y las calles son escenarios cotidianos de miradas, comentarios, tocamientos e intimidación.
+
+-   Autocuidado extremo: La falta de seguridad obliga a las mujeres a planificar sus rutas con lupa. Implica no usar cierta ropa si van a viajar en transporte, no caminar solas de noche, avisar siempre su ubicación en tiempo real a amigas o familiares, y gastar más dinero en transporte privado para evitar tramos peligrosos.
+
+-   Feminicidio: Es el miedo más profundo. La impunidad ante casos de desapariciones o violencia de género severa genera una sensación de desprotección institucional absoluta. Las alertas de género y las marchas son el reflejo de una ciudad que se siente hostil para ellas.
+
+-   Efecto de los homicidios en las mujeres: En el gráfico de Mujeres, entre la curva original color morada y la curva naranja se encuentran prácticamente superpuestas en todo el ciclo vital. Existe una diferencia sumamente sutil en las mismas edades jóvenes, pero su impacto gráfico y estadístico es casi imperceptible en comparación con el caso masculino esto debido a que las mujeres viven rodeadas de menos violencia a la que los hombtres están expuestos, aunque se presentan casos suelen disminuir de manera significativa a los vistos en los hombres .
 
 ![Probabilidades de morir para los hombres de CDMX con y sin homicidio como causa de muerte.](images/Probabilidad%20de%20morir%20hombres%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
 
+**Hombres:**
+
+-   Blanco principal de homicidios y agresiones físicas: Los hombres jóvenes y adultos son, por un amplio margen, las principales víctimas de homicidios dolosos, riñas y lesiones por arma de fuego o blanca en la CDMX. El espacio público suele volverse más letal para ellos en contextos de asaltos o disputas locales.
+
+-   El código de "no dejarse" y la resistencia: Culturalmente, ante un asalto o una provocación en la calle o el transporte, los hombres suelen sentir la presión de confrontar o resistirse, lo que muchas veces escala un robo común a una tragedia.
+
+-   Vulnerabilidad en horarios nocturnos y periferias: Los hombres que regresan tarde de trabajar en zonas industriales o periféricas de la ciudad (o que entran muy temprano) suelen ser el objetivo principal de bandas dedicadas al asalto a transeúnte con violencia, bajo el supuesto de que oponen más resistencia o llevan dinero de su jornada. Efecto de los homicidios en los hombres: En el gráfico de Hombres, la diferencia entre la curva original (azul claro) y la curva sin la causa (azul oscuro) es notablemente pronunciada. Esta separación inicia de forma visible a los 15 años y alcanza su máxima distancia entre los 20 y los 35 años . Al eliminar los homicidios, la probabilidad de morir en este rango de edad joven o donde puede ser más reproductiva para los hombres disminuye, lo cual puede verse afectado por distintos factores como los anteriores que vienen desde la personalidad que tienen los hombres un poco más ruda y de igual forma las condiciones de violencia que los rodean día con día desde el querer tener más poder hasta el reclutamiento para pertenecer a bandas delictivas o ser afectado por las mismas bandas delictivas.
+
 ![Esperanzas de vida al nacer para la población de CDMX con y sin homicidio como causa de muerte.](images/Esperanza%20de%20vida%20al%20nacer%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
+
+**Esperanza de vida al nacer:**
+
+-   Sobremortalidad masculina: Los homicidios reducen la esperanza de vida de los hombres en 0.70 años (aproximadamente 8.4 meses). En demografía, perder casi las tres cuartas partes de un año completo de esperanza de vida al nacer por una sola causa de muerte es un impacto sumamente severo, concentrado en edades jóvenes y en las edades más reproductivas de los hombres, lo cual nos dice que el homicidio es una causa demadiado importante y que se deben crear politicas de seguridad que de manera paulatina erradiquen el problema.
+
+-   Menor impacto en mujeres: Para las mujeres, la ganancia al eliminar los homicidios es de apenas 0.18 años (un poco más de 2 meses). Esto confirma que, en términos del volumen total de defunciones por las tablas de mortalidad, la violencia homicida altera de forma mucho más marginal su longevidad promedio y que nuevamente no esta afectando de manera tan fuerte como a los hombres.
+
+-   Diferencia de género: En el escenario real "Con homicidios", la brecha en la esperanza de vida entre mujeres y hombres es de 76.57−71.49=5.08 años. Si se eliminaran los homicidios "Sin homicidios", la brecha se reduciría a 76.76−72.19=4.57 años. Esto demuestra que la violencia es uno de los componentes que amplía la diferencia de género en la mortalidad de la población analizada.
 
 ## ¿Por qué la tasa de reemplazo es igual a 2.1?
 
