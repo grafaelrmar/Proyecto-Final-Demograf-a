@@ -1,0 +1,1173 @@
+---
+title: "Informe Proyecto Final Demografía. 
+        Ciudad de México."
+author:
+  - name: Melendez Guerrero Emily
+  - name: Ruíz Martínez Gustavo Rafael
+format: pdf
+editor: visual
+---
+
+## Introducción
+
+La Ciudad de México, antes llamada Distrito Federal es la capital de los Estados Unidos Mexicanos y una de las 32 entidades federativas del país. Se localiza en el valle de México en la región centro sur del país; colinda al norte, oeste y este con el Estado de México y al sur con Morelos. Tiene una extensión territorial de 1495 km², lo que representa el 0.1 % del territorio nacional, siendo la entidad más pequeña del país. De acuerdo al censo de 2020 su población es de 9,209,944 habitantes, que representa el 7.3 % del total del país. Es el núcleo urbano más grande de México, siendo además la mayor urbe dentro de la Zona Metropolitana del Valle de México; la metrópoli está posicionada como la aglomeración urbana más grande del mundo hispanohablante y de América, así como la octava más poblada del mundo.\[ La Ciudad de México representa el principal centro político, económico, social, académico, financiero, empresarial, turístico, cultural, de comunicaciones y de entretenimiento en México; dicha relevancia la traslada al escenario internacional al estar catalogada como una ciudad global Desde la perspectiva demográfica, la Ciudad de México representa una unidad de análisis estratégica debido a su alta densidad poblacional, su avanzado nivel de urbanización y su transición demográfica consolidada. A diferencia de otras entidades federativas, presenta tasas de crecimiento poblacional relativamente bajas, asociadas a una disminución sostenida de la fecundidad, una reducción en la tasa bruta de natalidad y un incremento progresivo en la esperanza de vida. Por su complejidad estructural, su transición demográfica avanzada y su papel central dentro del sistema urbano nacional, la Ciudad de México constituye un caso fundamental para el análisis demográfico contemporáneo, particularmente en estudios relacionados con estructura poblacional, dinámica de crecimiento, movilidad interna y envejecimiento.
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+# 1. Remover los objetos
+rm(list = ls())
+
+# 2. Instalar paquetes 
+#install.packages("lubridate", dependencies = T)
+#install.packages("dplyr")
+library(data.table)
+library(lubridate)
+library(kableExtra)
+library(ggplot2)
+library(tidyverse)
+library(magrittr)
+library(dplyr)
+
+# 3. Descargar tablas de datos
+#pop <- fread("https://repodatos.atdt.gob.mx/CONAPO/proyecciones/00#_Pob_Mitad_1950_2070.csv")
+pop <- fread("C:/Users/Admin/Desktop/Rafa/Proyecto final demografía/Demography_9219/data/00_Pob_Mitad_1950_2070.csv")
+
+# 4. Exploración de la tabla de población
+#table(pop$ENTIDAD)
+#table(pop$CVE_GEO)
+#table(pop$ANIO)
+
+#names(pop)
+#sum(pop$POBLACION)
+
+#5. Filtramos tabla de datos para nuestra entidad
+pop_cdmx <- pop[
+ENTIDAD == "Ciudad de México" &
+ANIO == 2026,
+.(SEXO, EDAD, POBLACION)
+]
+
+# 6. Instalar y cargar ggplot2 si no lo tienes
+#install.packages("ggplot2")
+
+```
+
+## Pirámide poblacional 2026
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+# Pongo fig.height=, fig.width=, adentro de {} para modificar tamaño de graficas
+
+# 7. Preparar los datos para la pirámide
+pop_cdmx <- pop[ENTIDAD == "Ciudad de México" & ANIO == 2026, .(SEXO, EDAD, POBLACION)]
+
+# 8. Convertir población masculina a valores negativos para graficar
+pop_cdmx[, POBLACION := ifelse(SEXO == "Hombres", -POBLACION, POBLACION)]
+
+# 9. Graficar pirámide poblacional
+ggplot(pop_cdmx, aes(x = EDAD, y = POBLACION, fill = SEXO)) +
+geom_bar(stat = "identity", width = 1) +
+coord_flip() +
+scale_y_continuous(labels = abs) +
+labs(title = "Pirámide poblacional de la Ciudad de México, 2026",
+x = "Edad",
+y = "Población") +
+theme_minimal() +
+scale_fill_manual(values = c("Hombres" = "steelblue", "Mujeres" = "salmon"))
+```
+
+## Análisis de la pirámide poblacional CDMX 2026
+
+Podemos observar que la pirámide poblacional de la Ciudad de México para el año 2026 tiene una forma de "cebolla" o campana, lo cual es característica de una transición demográfica avanzada. Notemos que la base es notablemente estrecha en comparación con la sección media; este fenómeno deja en evidencia la baja tasa de natalidad y señala que la población está concentrada principalmente en rangos de edad adulta.
+
+Asimismo, resalta la parte más ancha de la pirámide —donde se localiza el mayor volumen de habitantes— que se sitúa entre los 30 y 40 años. Esto representa el grueso de la fuerza laboral actual y el pico de su bono demográfico, lo que significa que la ciudad cuenta con una población mayoritariamente productiva. Sin embargo, el hecho de que la base sea tan estrecha advierte que este beneficio es temporal, ya que no habrá suficientes jóvenes en el futuro para sostener el sistema de pensiones y salud cuando este grupo se retire.
+
+Por último, es perceptible que el lado derecho, correspondiente a las mujeres, es ligeramente más extenso que el izquierdo. Esto confirma no solo una mayor presencia cuantitativa de mujeres en la capital, sino también una mayor longevidad, ya que la predominancia femenina se acentúa conforme avanza la edad en la cúspide de la pirámide. Desde una perspectiva actuarial, este fenómeno sugiere que los modelos de previsión deben anticipar una mayor duración en el pago de rentas vitalicias y una demanda creciente de servicios de salud especializados para este sector de la población.
+
+## Pirámide poblacional CDMX 2070
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+pop_cdmx_2070 <- pop[ENTIDAD == "Ciudad de México" & ANIO == 2070, .(SEXO, EDAD, POBLACION)]
+
+# 8. Convertir población masculina a valores negativos para graficar
+pop_cdmx_2070[, POBLACION := ifelse(SEXO == "Hombres", -POBLACION, POBLACION)]
+
+# 9. Graficar pirámide poblacional
+ggplot(pop_cdmx_2070, aes(x = EDAD, y = POBLACION, fill = SEXO)) +
+geom_bar(stat = "identity", width = 1) +
+coord_flip() +
+scale_y_continuous(labels = abs) +
+labs(title = "Pirámide poblacional de la Ciudad de México, 2070",
+x = "Edad",
+y = "Población") +
+theme_minimal() +
+scale_fill_manual(values = c("Hombres" = "steelblue", "Mujeres" = "salmon"))
+```
+
+## Análisis de la pirámide poblacional CDMX 2070
+
+Al observar la proyección para el año 2070, es evidente que la Ciudad de México habrá completado su transición hacia una estructura demográfica regresiva o invertida. La base de la pirámide 0-20 años es ahora la parte más estrecha de toda la gráfica, lo que indica que, tras décadas de baja natalidad, la población joven es mínima en comparación con los demás grupos.
+
+El cambio más drástico se localiza en la parte superior: la zona de mayor concentración poblacional se ha desplazado hacia los rangos de 60 a 80 años. Este fenómeno representa el fin del bono demográfico y el inicio de una era de envejecimiento masivo. Aquella generación que en 2026 estaba en su etapa más productiva, ahora conforma una cúspide ancha que ejercerá una presión sin precedentes sobre los sistemas de salud y pensiones.
+
+Finalmente, la asimetría de género es mucho más marcada que en las proyecciones anteriores. El lado derecho de la pirámide correspondiente a las mujeres sobresale notablemente sobre el izquierdo, especialmente a partir de los 70 años. Esta predominancia femenina extrema en la vejez confirma una longevidad muy superior en las mujeres, lo que sugiere que para 2070, los retos de seguridad social y cuidados de larga duración tendrán un rostro mayoritariamente femenino. Desde una perspectiva de riesgo, esto implica la necesidad de modelos actuariales diseñados para una supervivencia que alcanza de forma común los 90 años de edad.
+
+## Mortalidad en CDMX
+
+La Ciudad de México, antes llamada Distrito Federal es la capital de los Estados Unidos Mexicanos y una de las 32 entidades federativas del país. Se localiza en el valle de México en la región centro sur del país; colinda al norte, oeste y este con el Estado de México y al sur con Morelos. Tiene una extensión territorial de 1495 km², lo que representa el 0.1 % del territorio nacional, siendo la entidad más pequeña del país. De acuerdo al censo de 2020 su población es de 9,209,944 habitantes, que representa el 7.3 % del total del país. Es el núcleo urbano más grande de México, siendo además la mayor urbe dentro de la Zona Metropolitana del Valle de México; la metrópoli está posicionada como la aglomeración urbana más grande del mundo hispanohablante y de América, así como la octava más poblada del mundo.\[ La Ciudad de México representa el principal centro político, económico, social, académico, financiero, empresarial, turístico, cultural, de comunicaciones y de entretenimiento en México; dicha relevancia la traslada al escenario internacional al estar catalogada como una ciudad global Desde la perspectiva demográfica, la Ciudad de México representa una unidad de análisis estratégica debido a su alta densidad poblacional, su avanzado nivel de urbanización y su transición demográfica consolidada. A diferencia de otras entidades federativas, presenta tasas de crecimiento poblacional relativamente bajas, asociadas a una disminución sostenida de la fecundidad, una reducción en la tasa bruta de natalidad y un incremento progresivo en la esperanza de vida. Por su complejidad estructural, su transición demográfica avanzada y su papel central dentro del sistema urbano nacional, la Ciudad de México constituye un caso fundamental para el análisis demográfico contemporáneo, particularmente en estudios relacionados con estructura poblacional, dinámica de crecimiento, movilidad interna y envejecimiento. Para interpretar correctamente los hallazgos obtenidos en las funciones demograficas de mortalidad, es indispensable analizar la estructura, evolución y perfil de la capital. De acuerdo con el Diagnóstico Sanitario de la Ciudad de México, durante el periodo de 2010 a 2020 la entidad registró un incremento poblacional promedio del 4.05%. No obstante, este comportamiento es heterogéneo a nivel local: mientras que demarcaciones como Gustavo A. Madero y Coyoacán experimentaron contracciones demográficas, regiones como Milpa Alta, Cuajimalpa de Morelos, Benito Juárez y Miguel Hidalgo presentaron tasas de crecimiento significativamente superiores al promedio de la ciudad. Esta disparidad territorial exige un fortalecimiento diferenciado en la prestación de servicios públicos, con especial énfasis en Milpa Alta y Cuajimalpa debido a sus condiciones de rezago y bajos niveles de desarrollo social. En lo que corresponde a la distribución de una población segúnsu edad de la Ciudad de México muestra una transición demográfica avanzada hacia el envejecimiento. Actualmente, la edad mediana de la capital es la más alta del país, situándose en torno a los 35 años. El grupo de 15 a 64 años constituye el 70.9% del total, seguido por la población menor de 15 años con un 18%, y los adultos de 65 años y más, quienes ya representan el 11.2% de la población. Este último segmento ha duplicado su volumen en un periodo de 20 años respecto al año 2000, lo cual coincide con una disminución sostenida de la población infantil. Desde la perspectiva del análisis de riesgo, este fenómeno implica una inversión paulatina de la base de la pirámide poblacional, consolidando una estructura de edad avanzada donde el desgaste de la población se traduce en un incremento masivo del volumen absoluto de defunciones (nDx) concentrado en las etapas tardías de la vida. Está madurez altera las causas de muerte transitanto de riesgos infecciosos a un predominio de enfermedades crónico degenerativas. Al avanzar la pirámide hacía edades mayores, el aumento de padecimientos como lo son la diabetes mellitus, las enfermedades cardiovasculares y los tumores malignos se vuelven el principal motor del aumento en la fuerza de mortalidad. Este perfil epidemiológico crónico degenerativo que presenta la capital del país genera un impacto directo en la intensidad de las tasas específicas de mortalidad, provocando que de manera visual haya una pendiente muy pronunciada. A esta carga de enfermedad crónica se sumó el impacto de fenómenos severos, particularmente visibles durante el periodo 2020-2021. Debido a la alta densidad poblacional y de que estamos hablando de la zona metropolitana, la Ciudad de México registró una de las tasas de mortalidad más altas del país a causa de la pandemia de COVID-19. Al contrastar las tasas año con año frente a la línea base de 2019, este impacto epidemiológico se tradujo en una alteración en las probabilidades de fallecer dentro de la población económicamente activa como lo son los jovenes y adultos. Este incremento de defunciones interrumpió temporalmente la tendencia decreciente de la mortalidad general y generó un descenso en la esperanza de vida para esos años. Donde por un lado se tiene, una mortalidad infantil controlada gracias a la concentración de infraestructura hospitalaria y, por el otro, un ascenso acelerado en el extremo derecho que responde tanto al envejecimiento poblacional crónico y las enfermedades degenerativas, como al impacto de la reciente crisis sanitaria urbana.
+
+## Diagrama de Flujo
+
+![Proceso de construcción de las tablas de vida](images/Diagrama%20proyecto%20demografía.jpeg){fig-align="center"}
+
+## Explicación del diagrama
+
+### I. Inicio
+
+La fase inicial de este proyecto se centró en el estudio de los fundamentos demográficos y la identificación del alcance analítico. A partir de este diagnóstico se establecieron objetivos específicos orientados a garantizar un desarrollo riguroso de las metodologías aplicadas. El resultado de esto es un informe técnico que integra la teoría demográfica, así como un análisis cuantitativo estructurado permitiendo identificar con precisión
+
+analizar cuáles son los factores que impactan directamente a las dinámicas demográficas
+
+### II. Obtención de datos (INEGI)
+
+La información se obtuvo a través del portal oficial del Instituto Nacional de Estadística y Geografía (INEGI) **que es el órgano constitucional autónomo de México encargado de proporcionar la información estadística, geográfica y demográfica del país. Con fines académicos, se descargaron bases oficiales** y registros administrativos de población y defunciones, desglosados por edad y sexo. El uso de estás fuentes oficiales **garantiza transparencia demográfica, calidad estadistica y representatividad adecuada para** la construcción de indicadores longitudinales entre los años de estudio.
+
+### III. Preprocesamiento de datos
+
+En está etapa se llevo a cabo la limpieza y depuración de la relación mediante Microsoft Excel. El processo incluyo la revisión de datos, detcción de duplicados, homogenización de formatos y correción de inconsistencias. Esta etapa fue crítica para consolidar cifras y así poder obtener las tasas específicas de mortalidady Defunciones observadas, que representan insumos indispensables para un análisis demográfico exhaustivo.
+
+### IV.Estimación de indicadores - Tasa especifica de mortalidad (nMx)
+
+Utilizando los censos y registros de los años 2019, 2020 y 2021 se procesaron las tasas específicas de mortalidad (nMx). Este análisis permite observar la tendencia de la  ten el periodo y edades seleccionadas.
+
+### V. Defunciones (nDx)
+
+Nuevamente utilizando los censos y registros de los años 2019, 2020 y 2021 se procesaron las Defunciones observadas (nDx). Este análisis permite observar la tendencia de la mortalidad en el periodo y edades seleccionadas.
+
+### VI. Construcción de Tablas de vida (Life Table)
+
+A partir de las tasas estimadas, se procedió a la construcción de las tablas de vida. Bajo ayuda y supervisión de los ayudantes, se calcularon indicadores demograficos importantes, como:
+
+nax: Promedio de años-persona vividos por aquellos que murieron entre las edades x y x + n
+
+nPx: probabilidad de fallecer entre las edades x y x + n,
+
+nqx: probabilidad de sobrevivir entre las edades x y x + n,
+
+lx: número de sobrevivientes en la edad x
+
+### VII. Realización de gráficas
+
+A partir de tablas de vida se generaron representaciones gráficas de las funciones de mortalidad utilizando escalas logarítmicas.
+
+### VIII. Análisis de gráficas
+
+Dado al análisis de representaciones gráficas de las funciones de mortalidad generadas anteriormente, podemos observar el comportamiento de la mortalidad en edades tempranas y avanzadas. El análisis se centró en la Ciudad de México (CDMX), interpretando visualmente los cambios en los indicadores y el impacto en fenómenos de la estructura demográfica de la entidad escogida.
+
+### IX. Guardar resultados finales
+
+En la fase final, se integran de manera sistemática todos los productos del análisis. El conjunto de entregables finales que componen este proyecto son:
+
+Tablas de mortalidad completas: Desglosadas por edad y sexo para el périodo de estudio
+
+Visualización de datos**:** Gráficas en escala logarítmica para el análisis de la intensidad de la mortalidad y gráficas comparativas que permiten observar la evolución temporal.
+
+Base de datos y documentación: Bases de datos depuradas y el registro metodológico detallado que garantiza la transparencia de cada procedimiento realizado.
+
+### X. Fin
+
+El proceso culmina con una validación integral de los resultados obtenidos. Esta revisión final asegura que cada etapa del análisis demográfico que inicia desde la desde la captura de la base de datos y la comprensión teórica de cada uno de los elementos demográficos vistos hasta la construcción de las tablas de vida se haya ejecutado en estricta conformidad con los estándares técnicos exigidos por la demografía formal y la ciencia actuarial.
+
+La implementación de este flujo de trabajo estructurado garantizó un proceso ordenado, replicable y fundamentado en evidencia estadística sólida. Más allá de la obtención de cifras, esta metodología permite capturar y comprender las dinámicas que desencadena a la complejidad demográfica de la Ciudad de México, proporcionando una base analítica capaz de informar modelos de previsión social y políticas públicas en un contexto urbano en constante transformación.
+
+## Fórmulas Utilizadas
+
+### Tasa Específica de Mortalidad
+
+$$
+{}_n m_x = \frac{{}_n D_x}{{}_n N_x}
+$$
+
+donde:
+
+-   ${}_n m_x$: Tasa de mortalidad entre las edades $x$ y $x+n$
+-   ${}_n D_x$: Defunciones entre las edades $x$ y $x+n$
+-   ${}_n N_x$: Población entre las edades $x$ y $x+n$
+
+### Crecimiento Exponencial
+
+Se utilizó el método de crecimiento exponencial para interpolar la población entre censos. La fórmula utilizada es: $$
+N(t) = N_0 \cdot e^{r \cdot (t - t_0)}
+$$
+
+donde:
+
+-   $N(t)$: Población en el tiempo $t$
+-   $N_0$: Población inicial
+-   $r$: Tasa de crecimiento
+-   $t_0$: Tiempo inicial
+
+### Probabilidad de Supervivencia
+
+$$
+{}_n p_x = 1 - {}_n q_x
+$$
+
+donde:
+
+-   ${}_n p_x$: Probabilidad de sobrevivir entre las edades $x$ y $x+n$
+
+### Tabla de Vida - Probabilidad de Muerte
+
+$$
+{}_n q_x = \frac{n \cdot {}_n m_x}{1 + (n - {}_n a_x) \cdot {}_n m_x}
+$$
+
+donde:
+
+-   $n$: Amplitud del intervalo de edad
+-   ${}_n a_x$: Años promedio vividos en el intervalo por quienes fallecen en él
+
+### Cálculo de Sobrevivientes
+
+$$
+\ell_{x+n} = \ell_x \cdot {}_n p_x
+$$
+
+donde:
+
+-   $\ell_{x+n}$: Número de sobrevivientes a la edad $x+n$
+-   $\ell_x$: Número de sobrevivientes a la edad $x$
+-   ${}_n p_x$: Probabilidad de supervivencia entre $x$ y $x+n$
+
+### Cálculo de Defunciones entre Edades
+
+$$
+{}_n d_x = \ell_x - \ell_{x+n}
+$$
+
+o alternativamente:
+
+$$
+{}_n d_x = \ell_x \cdot {}_n q_x
+$$
+
+donde:
+
+-   ${}_n d_x$: Defunciones ocurridas entre las edades $x$ y $x+n$
+-   ${}_n q_x$: Probabilidad de morir entre $x$ y $x+n$
+
+### Años-Persona Vividos entre Edades
+
+$$
+{}_n L_x = (n \cdot \ell_{x+n}) + ({}_n a_x \cdot {}_n d_x)
+$$
+
+Para el último grupo de edad abierto ($x^*$):
+
+$$
+{}_{\infty} L_{x^*} = \frac{\ell_{x^*}}{{}_{\infty} m_{x^*}}
+$$
+
+### Años-Persona por Vivir
+
+$$
+T_x = \sum_{a=x}^{\omega} {}_n L_a
+$$
+
+donde $\omega$ representa el límite superior de edad de la tabla.
+
+### Esperanza de Vida
+
+$$
+e_x = \frac{T_x}{\ell_x}
+$$
+
+-   $e_x$: Esperanza de vida a la edad exacta $x$
+-   $T_x$: Años-persona por vivir a partir de la edad $x$
+-   $\ell_x$: Número de sobrevivientes a la edad exacta $x$
+
+### Fórmulas de Fecundidad y Reproducción
+
+**Tasa Global de Fecundidad (TGF):** $$TGF = 5 \cdot \sum_{x=15}^{49} f_x$$
+
+**Tasa Bruta de Reproducción (TBR):** $$TBR = 5 \cdot \sum_{x=15}^{49} f_{x,f}$$
+
+**Tasa Neta de Reproducción (TNR):** $$TNR = 5 \cdot \sum_{x=15}^{49} (f_{x,f} \cdot {}_np_x)$$
+
+**Tasa Específica de Fecundidad por Edad (TEFE)**
+
+$$TEFE_x = \frac{N_x}{P_{f,x}} \cdot 1000$$
+
+donde:
+
+-   $f_x$: Tasa específica de fecundidad a la edad $x$.
+
+-   $f_{x,f}$: Tasa específica de fecundidad femenina a la edad $x$.
+
+-   ${}_np_x$: Probabilidad de supervivencia.
+
+-   $N_x$: Número de nacimientos de madres en el grupo de edad \$x\$.
+
+-   $P_{f,x}$: Población femenina en el grupo de edad \$x\$.
+
+-   $1000$: Factor de expansión (se expresa por cada mil mujeres).
+
+**Razón de Masculinidad al Nacer** **(SRB)**
+
+$$SRB = \frac{\text{Nacimientos de varones}}{\text{Nacimientos de niñas}}$$
+
+**Tasa Bruta de Reproducción** **(GRR)**
+
+$$GRR \approx TFR \times \left( \frac{1}{1 + SRB} \right)$$
+
+**Tasa Neta de Reproducción (NRR)**
+
+$$NRR = TFR \times \left( \frac{1}{1 + SRB} \right) \times p(A_m)$$
+
+Donde:
+
+-   $TFR$: Tasa Global de Fecundidad.
+
+-   $\frac{1}{1 + SRB}$: Proporción de nacimientos que son niñas.
+
+-   $p(A_m)$: Probabilidad de que una niña sobreviva desde el nacimiento hasta la edad media de la maternidad (aproximadamente entre los 25 y 30 años).
+
+\newpage
+
+## Tablas de vida de hombres y mujeres de CDMX en el año 2019 (En pandemia)
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+#--- Librerias necesarias --- 
+library(readxl)
+#install.packages('dplyr')
+library(dplyr)
+library(data.table)
+library(lubridate)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(tidyverse)
+library(data.table) 
+library(knitr)
+library(kableExtra)
+
+#--- 1. Establecer la ruta del archivo --- 
+ruta_archivo <- "C:/Users/Admin/Desktop/Rafa/Proyecto final demografía/Demography_9219/data/Datos_Tabla_Mortalidad_CDMX.xlsx"
+
+#--- 2. Lectura y limpieza de datos --- 
+CDMX_mujeres <- read_excel(ruta_archivo, 
+                           sheet = "Tabla de Mortalidad Mujeres",
+                           skip = 2) %>%
+  # Homologar los nombres de las columnas 
+  rename(x = 1, 
+         n = 2, 
+         N = 3, 
+         D = 4) %>%
+  # Transformar todas las columnas a variables numéricas 
+  mutate(
+    x = as.numeric(x),
+    n = as.numeric(n),
+    N = as.numeric(N),
+    D = as.numeric(D),
+    # Cálculo de las tasas de mortalidad (se guarda como 'mx' en minúsculas)
+    mx = D/N
+  )
+
+#--- 3. Función de tablas de vida abreviadas  ---
+lt_abreviada <- function(x, n, mx, sex = "f", IMR = NA){
+  m <- length(x)
+  ax <- n / 2 
+  
+  # Ajustes Coale-Demeny para edades 0-1 
+  if(sex == "m"){
+    ax[1] <- ifelse(mx[1] >= 0.107, 0.330, 0.045 + 2.684 * mx[1])
+  } else {
+    ax[1] <- ifelse(mx[1] >= 0.107, 0.350, 0.053 + 2.800 * mx[1])
+  }
+  
+  # Ajustes Coale-Demeny para edades 1-4 
+  if(sex == "m"){
+    ax[2] <- ifelse(mx[1] >= 0.107, 1.352, 1.651 - 2.816 * mx[1])
+  } else {
+    ax[2] <- ifelse(mx[1] >= 0.107, 1.361, 1.522 - 1.518 * mx[1])
+  }
+  
+  # Probabilidades de muerte
+  qx <- (n * mx) / (1 + (n - ax) * mx)
+  qx[m] <- 1 
+  
+  # Probabilidades de sobrevivencia 
+  px <- 1 - qx 
+  
+  # lx 
+  lx <- 100000 * cumprod(c(1, px[-m]))
+  
+  # dx
+  dx <- c(-diff(lx), lx[m])
+  
+  # Lx 
+  
+  Lx <- (n * c(lx[-1],0)) + (ax * dx) 
+  Lx[m] <- lx[m]/mx[m]
+  
+
+  # Tx
+  Tx <- rev(cumsum(rev(Lx)))
+  
+  # ex 
+  ex <- Tx / lx 
+  
+  return(data.table(x, n, mx, ax, qx, px, lx, dx, Lx, Tx, ex))
+}
+
+#--- 4. Aplica función a tus datos --- 
+tabla_vida_mujeres <- lt_abreviada(
+  x   = CDMX_mujeres$x, 
+  n   = CDMX_mujeres$n,
+  mx  = CDMX_mujeres$mx, 
+  sex = "f"
+)
+
+#--- 5. Visualizar resultado ---
+#head(tabla_vida_mujeres)
+
+tabla_vida_mujeres %>%
+  kable(format = "latex", booktabs = TRUE, caption = "Tabla de Vida de Mujeres") %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+
+#Gráfica mx en escala lineal 
+ggplot(tabla_vida_mujeres, aes(x=x, y=mx)) + geom_line(color = "red") + 
+  theme_minimal() + labs(title = "Tasa de mortalidad - Escala lineal. Mujeres CDMX", 
+                         x = "Edad",
+                         y = "mx")  
+
+# Gráfica de mx a escala logarítmica 
+ggplot(tabla_vida_mujeres, aes(x = x, y = mx)) + 
+  geom_line(color = "blue") +
+  scale_y_log10() + 
+  theme_minimal() + 
+  labs(title = "Tasa de mortalidad - Escala log. Mujeres CDMX", x = "Edad", y = "mx log") 
+
+                                                                              
+#Tabla de mortalidad Hombres 
+CDMX_hombres <- read_excel(ruta_archivo, 
+                           sheet = "Tabla de Mortalidad Hombres ",
+                           skip = 2) %>%
+  # Homologar los nombres de las columnas 
+  rename(x = 1, 
+         n = 2, 
+         N = 3, 
+         D = 4) %>%
+  # Transformar todas las columnas a variables numéricas 
+  mutate(
+    x = as.numeric(x),
+    n = as.numeric(n),
+    N = as.numeric(N),
+    D = as.numeric(D),
+    mx = D/N
+  )
+  
+tabla_vida_hombres <- lt_abreviada(
+  x   = CDMX_hombres$x, 
+  n   = CDMX_hombres$n,
+  mx  = CDMX_hombres$mx, 
+  sex = "m"
+)
+
+
+#head(tabla_vida_hombres)
+
+tabla_vida_hombres %>%
+  kable(format = "latex", booktabs = TRUE, caption = "Tabla de Vida de Hombres") %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+
+#Gráfica mx en escala lineal 
+ggplot(tabla_vida_hombres, aes(x=x, y=mx)) + geom_line(color = "red") + 
+  theme_minimal() + labs(title = "Tasa de mortalidad - Escala lineal. Hombres CDMX", 
+                         x = "Edad",
+                         y = "mx")  
+
+# Gráfica de mx a escala logarítmica 
+ggplot(tabla_vida_hombres, aes(x = x, y = mx)) + 
+  geom_line(color = "blue") +
+  scale_y_log10() + 
+  theme_minimal() + 
+  labs(title = "Tasa de mortalidad - Escala log. Hombres CDMX", x = "Edad", y = "mx log") 
+
+
+#Esperanza de vida al nacer
+e0_mujeres <- data.table(
+  Sexo = "Mujeres", 
+  Esperanza_Vida_al_Nacer_2019 = tabla_vida_mujeres$ex[1]
+)
+
+e0_hombres <- data.table(
+  Sexo = "Hombres", 
+  Esperanza_Vida_al_Nacer_2019 = tabla_vida_hombres$ex[1]
+)
+
+# Combinamos ambos sexos en un solo cuadro unificado
+cuadro_esperanza_vida <- rbind(e0_mujeres, e0_hombres)
+
+# Redondeamos a dos decimales para una presentación limpia
+cuadro_esperanza_vida[, Esperanza_Vida_al_Nacer_2019 := round(Esperanza_Vida_al_Nacer_2019, 2)]
+
+
+#Visualizamos el cuadro
+#print("=== CUADRO RESUMEN: ESPERANZA DE VIDA AL NACER ===")
+#print(cuadro_esperanza_vida)
+
+cuadro_esperanza_vida %>%
+  kable(format = "latex", booktabs = TRUE, caption = "Esperanza de vida al nacer") %>%
+  kable_styling(latex_options = c("striped", "scale_down"))
+
+```
+
+## Gráficas Tablas de vida
+
+A partir de las tablas de mortalidad construidas, se derivan las siguientes representaciones gráficas con el objetivo de analizar visualmente el comportamiento y la tendencia de las funciones demográficas aplicadas a la población de la Ciudad de México.
+
+## Función logaritmica
+
+Recordando que al visualizar los indicadores demograficos como lo son las tasas de mortalidad y los cambios poblacionales no crecen de forma lineal, sino exponencial. Al aplicar el logaritmo, logramos obtener situaciones como lo son la linealización de los datos, interpretación en las tasas de cambio y estabiliza la varianza.
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+#--- Carga de librerias que vamos a usar---
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(patchwork)
+# --- Función auxiliar para graficar en log ---
+plot_log <- function(data, col, titulo, subtitulo = "", color_linea = "blue") {
+  ggplot(data, aes(x = x, y = .data[[col]])) +
+    geom_line(color = color_linea, linewidth = 0.9) +
+    geom_point(color = color_linea, size = 1.4, alpha = 0.7) +
+    scale_y_log10(labels = scales::label_scientific()) +
+    scale_x_continuous(breaks = seq(0, max(data$x), by = 10)) +
+    theme_minimal(base_size = 12) +
+    theme(
+      plot.title    = element_text(face = "bold", size = 13),
+      plot.subtitle = element_text(color = "gray", size = 10),
+      panel.grid.minor = element_blank()
+    ) +
+    labs(title = titulo, subtitle = subtitulo, x = "Edad (x)", y = paste0("log(", col, ")"))
+}
+```
+
+## Años persona vividos Mujer
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+apv_m <- plot_log(tabla_vida_mujeres, "ax",
+  "Años persona vividos (nax) — Mujeres CDMX", color_linea = "pink")
+print(apv_m)
+```
+
+### Análisis
+
+Podemos observar que en la edad 0 es el punto más bajo de la curva esto demuestra que la mortalidad infantil en mujeres es muy fuerte puesto que fallecen antes de cumplir el primer año, es decir, fallecen a muy temprana edad. Por lo cual el grupo de edad en el que las niñas fallecen es significativamente menor al medio año, pero por otro lado tenemos que de 1-4 años el incremento es muy visible, estro demuestra que si bien los niños son muy vulnerables al nacer al momento que van creciendo van dejando de un lado su vulnerabilidad y entonces los fallecimientos de niñez ocurren de forma más distribuida, después podemos notar que ya no hay curva ya hay una estabilización visible esto quiere decir que la población femenina adulta tiene una distribución uniforme de los fallecimientos dentro del intervalo.
+
+## Años persona vividos Hombre
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+apv_h <- plot_log(tabla_vida_hombres, "ax",
+  "Años persona vividos (nax) — Hombres CDMX", color_linea = "blue")
+print(apv_h)
+```
+
+### Análisis
+
+Podemos observar que al igual que lo visto en los años persona vividos en mujeres, el valor en la edad 0 es el punto más bajo de la curva esto demuestra que la mortalidad infantil en hombres es muy fuerte tanto por razones biológicas y de vulnerabilidad infantil por lo cual el valor en la mortalidad infantil de hombres se mantiene ligeramente más baja. Ahora pasamos al análisis de 1 a 4 donde nuevamente se vuelve a ver un incremento visible para después cumplir con el mismo supuesto donde la población adulta masculina tiene una distribución uniforme de los fallecimientos dentro del intervalo.
+
+## Comparativa Años persona vividos
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+# Creamos las gráficas sin títulos individuales para evitar el encimado
+apv_m <- plot_log(tabla_vida_mujeres, "ax", "", color_linea = "pink") + labs(title = "Mujeres")
+apv_h <- plot_log(tabla_vida_hombres, "ax", "", color_linea = "blue") + labs(title = "Hombres")
+
+# Combinamos las gráficas usando patchwork
+comparativa_apv <- (apv_m + apv_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Años persona vividos (nax)",
+    subtitle = "Comparativa por sexo en CDMX",
+    theme = theme(plot.title = element_text(size = 14, face = "bold"))
+  )
+
+# Imprimimos
+print(comparativa_apv)
+```
+
+## Probabilidad de fallecer Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+prob_muerte_m <- plot_log(tabla_vida_mujeres, "qx",
+  "Probabilidad de fallecer (nqx) — Mujeres CDMX", color_linea = "pink")
+print(prob_muerte_m)
+
+```
+
+## Análisis
+
+Podemos notar que la probabilidad de fallecer para la población femenina de la ciudad de México del año 2019,2020 y 2021 refleja la curva que sigue la forma clásica de la mortalidad (vista en clase) respetando o dejando ver la estructura biológica tradicional de la mortalidad en mujeres, pero considerando algunas alteraciones criticas debido a las condiciones de Covid desarrolladas en 2021. En la primera parte se observa el descenso clásico de la mortalidad ya visto anteriormente (APV) y retomando nuevamente una subida en los 5 a 10años y podríamos decir que al final en los años 50 a 80 se aprecia una aceleración agresiva, alcanzando una cúspide pronunciada a los 80 años y una drástica caída que se observa en el grupo de más de 85 años, no significa una ganancia real en la longevidad de las mujeres de la CDMX; por el contrario, es el reflejo de un exceso de mortalidad anticipadamente a las cohortes de adultas mayores más vulnerables en 2021.
+
+## Probabilidad de fallecer Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+prob_muerte_h <- plot_log(tabla_vida_hombres, "qx",
+  "Probabilidad de fallecer (nqx) — Hombres CDMX", color_linea = "blue")
+print(prob_muerte_h)
+
+```
+
+### Análisis
+
+Podemos notar que la probabilidad de fallecer para la población de los hombres en Ciudad de México muestra un perfil más riesgoso como se a dejado ver en las demás graficas, tanto por riesgos biológicos o de otro tipo, donde reportan su punto más bajo enmascaramiento la mortalidad infantil (5 años) y presentan una curva más empinada entre 10 y 20 años de edad. Esto entrando en contexto se debe a factores sociambientales y conductas de riesgo (como accidentes, violencia, delincuencia, etc). En estos años hemos visto el crecimiento acelerado del riesgo desde edades muy tempranas, es decir, se han normalizado más las conductas de violencia en hombres. Al se la ciudad de México el Covid 19 incrementó de forma masiva la letalidad en los varones en edad activa. Finalmente, la curva alcanza un pico excepcionalmente elevado a los 80 años (notablemente superior al de las mujeres) para luego quebrarse bruscamente en el grupo de edad final abierta (85 y más), confirmando que la población masculina de la capital fue el sector que recibió el impacto más destructivo en la esperanza de vida durante ese año.
+
+## Comparativa de Probabilidad de fallecer Mujer y Hombre
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+# Creamos las gráficas por separado, eliminando el texto del argumento principal
+prob_muerte_m <- plot_log(tabla_vida_mujeres, "qx", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+prob_muerte_h <- plot_log(tabla_vida_hombres, "qx", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+# Combinamos usando patchwork
+comparativa_qx <- (prob_muerte_m + prob_muerte_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Probabilidad de fallecer (nqx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+# Imprimimos con dimensiones adecuadas para PDF
+# Asegúrate de usar fig.width=10, fig.height=5 en el bloque de Quarto
+print(comparativa_qx)
+```
+
+## Probabilidad de Sobrevivir Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+prob_sob_m <- plot_log(tabla_vida_mujeres, "px",
+  "Probabilidad de sobrevivir (npx) — Mujeres CDMX", color_linea = "pink")
+print(prob_sob_m)
+
+```
+
+### Análisis
+
+La probabilidad de sobrevivir para la población femenina de la Ciudad de México, nos indica como las mujeres muestran una alta resistencia biológica inicial de las mujeres pero también la velocidad con la que se deterioraron las condiciones de supervivencia en las edades durante el 2021. En las primeras etapas de la vida, la curva muestra un ligero bajón en el primer año debido a la vulnerabilidad que se presenta en recién nacidos, pero alcanza rápidamente su punto máximo y de mayor estabilidad entre los 5 y los 15 años, manteniéndose muy cerca del tope de la escala. A partir de los 20 años, la probabilidad de sobrevivir inicia un descenso que se mantiene durante la juventud y la adultez temprana, lo que refleja que las mujeres en estas etapas sufrieron en menor medida el impacto directo de la mortalidad generalizada de ese año. Sin embargo, el punto crítico ocurre en los 40 años y va subiendo al llegar a los 50 años y por último hay un desplome en los 80 años esto representa la probabilidad de sobrevivir de un intervalo a otro.
+
+## Probabilidad de Sobrevivir Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+prob_sob_h <- plot_log(tabla_vida_hombres, "px",
+  "Probabilidad de sobrevivir (npx) — Hombres CDMX", color_linea = "blue")
+print(prob_sob_h)
+
+```
+
+### Análisis
+
+Análisis de la Probabilidad de Sobrevivir en Hombres La de probabilidad de sobrevivir para la población masculina de la Ciudad de México nos muestra un escenario difícil y acelerado, donde la vulnerabilidad de los hombres de la capital se une al impacto crítico de la pandemia, provocando un colapso de la supervivencia a edades notablemente más tempranas que en las mujeres. Tras superar el riesgo del primer año y alcanzar su máximo de supervivencia en la niñez, la curva masculina experimenta un quiebre visible e inmediato a los 15 años. Esto nuevamente se ve ligado a temas externos como lo son la violencia, accidentes, narco cultura, entre otros aspectos que día con día están más normalizados en la población masculina del país. Sin embargo, la pendiente no se estabiliza, sino que continúa descendiendo de manera constante a lo largo de los 20, 30 y 40 años, lo que demuestra que las crisis que envuelven a la población masculina quito la capacidad de supervivencia de la población masculina en plena edad productiva. El colapso de la curva ocurre a partir de los 45 años, la probabilidad de sobrevivir de los hombres experimenta una caída vertical que se hunde por debajo de los valores de la gráfica al llegar a los 55 años. Este desplome prematuro es el indicador demográfico más crudo del exceso de mortalidad en la capital.
+
+## Comparativa de Probabilidad de Sobrevivir Mujer y Hombre
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+prob_sob_m <- plot_log(tabla_vida_mujeres, "px", "", color_linea = "pink") +
+  labs(title = "Mujeres")
+
+prob_sob_h <- plot_log(tabla_vida_hombres, "px", "", color_linea = "blue") +
+  labs(title = "Hombres")
+
+comparativa_px <- (prob_sob_m + prob_sob_h) +
+  plot_layout(ncol = 2) +
+  plot_annotation(
+    title = "Probabilidad de sobrevivir (npx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_px)
+
+```
+
+## Número de Sobrevivientes Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+sobrevivientes_m <- plot_log(tabla_vida_mujeres, "lx",
+  "Sobrevivientes (lx) — Mujeres CDMX", color_linea = "pink")
+print(sobrevivientes_m)
+
+```
+
+## Número de Sobrevivientes Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+sobrevivientes_h <- plot_log(tabla_vida_hombres, "lx",
+  "Sobrevivientes (lx) — Hombres CDMX", color_linea = "blue")
+print(sobrevivientes_h)
+```
+
+## Comparativa Número de Sobrevivientes Mujeres y Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+sobrevivientes_m <- plot_log(tabla_vida_mujeres, "lx", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+sobrevivientes_h <- plot_log(tabla_vida_hombres, "lx", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+comparativa_lx <- (sobrevivientes_m + sobrevivientes_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Número de sobrevivientes (lx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_lx)
+```
+
+## Número de Defunciones Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+defunciones_m <- plot_log(tabla_vida_mujeres, "dx",
+  "Defunciones (ndx) — Mujeres CDMX", color_linea = "pink")
+print(defunciones_m)
+
+```
+
+## Número de Defunciones Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+defunciones_h <- plot_log(tabla_vida_hombres, "dx",
+  "Defunciones (ndx) — Hombres CDMX", color_linea = "blue")
+print(defunciones_h)
+```
+
+## Comparativa Número de Defunciones Mujeres y Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+defunciones_m <- plot_log(tabla_vida_mujeres, "dx", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+defunciones_h <- plot_log(tabla_vida_hombres, "dx", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+comparativa_dx <- (defunciones_m + defunciones_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Número de defunciones (dx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_dx)
+```
+
+## Número de Años Persona Vividos Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+numero_apv_m <- plot_log(tabla_vida_mujeres, "Lx",
+  "Años-persona vividos (nLx) — Mujeres CDMX", color_linea = "pink")
+print(numero_apv_m)
+
+```
+
+### Análisis
+
+El comportamiento de los años-persona vividos para la población femenina de la Ciudad de México, nos indica el tiempo que una persona logra sobrevivir a partir de las condiciones de vida establecidas.
+
+Durante las primeras etapas de la vida (de los 0 a los 40 años), la curva muestra una pendiente suave y una estabilidad en la parte de arriba del gráfico. Esto nos describe un fenómeno donde se está rectangularizando las curvas es decir la gran mayoría de las mujeres nacidas logran sobrevivir las etapas infantiles, juveniles y de la adultez temprana en la CDMX pero podemos notar que la curva sufre un quiebre drástico y adopta una pendiente descendente muy pronunciada. Hacia las edades de 60 y 65 años, la línea continua se rompe, dejando puntos aislados en las edades avanzadas (75 y 85 años) que caen. Esta pérdida acelerada del volumen de años-persona vividos en edades adultas intermedias es el reflejo del exceso de mortalidad por COVID-19 en la capital: la velocidad de los fallecimientos superó la capacidad de reemplazo.
+
+## Número de Años Persona Vividos Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+numero_apv_h <- plot_log(tabla_vida_hombres, "Lx",
+  "Años-persona vividos (nLx) — Hombres CDMX", color_linea = "blue")
+print(numero_apv_h)
+```
+
+### Análisis
+
+La curva de los años-persona vividos para la población masculina de la Ciudad de México expone un escenario de desgaste demográfico mucho más grave y acelerado, evidenciando que hay un impacto que recortó de forma drástica el tiempo de vida acumulado por los varones a edades más tempranas. A diferencia de la gráfica femenina, el tramo de estabilidad inicial es considerablemente más corto. Aunque se mantiene elevado al inicio, la pendiente descendente comienza a hacerse visible de manera continua a partir de los 20 y 30 años. En la CDMX, esta pérdida paulatina de años-persona en edades productivas suele asociarse a la sobremortalidad por causas externas. El desplome definitivo ocurre de manera devastadora a partir de los 40 años. La curva masculina adquiere una inclinación vertical que interrumpe la continuidad de la línea antes de llegar a los 65 años, dejando los últimos registros (70 y 80 años) en niveles críticamente bajos. Este colapso del área bajo la curva es la traducción demográfica directa de la pérdida de años de esperanza de vida masculina en la entidad durante ese año.
+
+## Comparativa número de años persona vividos Mujeres y Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+numero_apv_m <- plot_log(tabla_vida_mujeres, "Lx", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+numero_apv_h <- plot_log(tabla_vida_hombres, "Lx", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+comparativa_Lx <- (numero_apv_m + numero_apv_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Años-persona vividos (nLx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_Lx)
+```
+
+## Números Total de Años persona que les resta por vivir Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+total_apv_m <- plot_log(tabla_vida_mujeres, "Tx",
+  "Total años-persona (nTx) — Mujeres CDMX", color_linea = "pink")
+print(total_apv_m)
+
+```
+
+## Números Total de Años persona que les resta por vivir Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+total_apv_h <- plot_log(tabla_vida_hombres, "Tx",
+  "Total años-persona (nTx) — Hombres CDMX", color_linea = "blue")
+print(total_apv_h)
+```
+
+## Comparativa números Total de Años persona que les resta por vivir Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+total_apv_m <- plot_log(tabla_vida_mujeres, "Tx", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+total_apv_h <- plot_log(tabla_vida_hombres, "Tx", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+comparativa_Tx <- (total_apv_m + total_apv_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Total de años-persona vividos (Tx)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_Tx)
+```
+
+## Esperanza de vida Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+
+espe_m <- plot_log(tabla_vida_mujeres, "ex",
+  "Esperanza de vida (ex) — Mujeres CDMX", color_linea = "pink")
+print(espe_m)
+
+```
+
+### Análisis
+
+El comportamiento de la esperanza de vida restante para las mujeres de la Ciudad de México, funciona como el indicador definitivo de las tablas de mortalidad. Al acumular los efectos de los riesgos medidos en las funciones de probabilidad de fallecer, de sobrevivir y los años-persona vividos, esta curva expone el impacto demográfico neto y la pérdida en la longevidad causada por algunos puntos externos de la demografía y más enfocados a la situación del país. La curva inicia en su punto más alto en la edad cero, el cual corresponde a la esperanza de vida al nacer Entre los 0 y los 5 años se aprecia una sutil estabilidad o un ligero incremento que responde a un patrón demográfico clásico una vez que las niñas superan el elevado riesgo epidemiológico, neonatal y perinatal del primer año de vida, su expectativa de años futuros se estabiliza al haber dejado atrás la etapa de mayor vulnerabilidad de la infancia. A partir de los 20 años y durante toda la madurez, la curva de las mujeres muestra un descenso suave. Sin embargo, el quiebre crítico de la función ocurre al ingresar a la vejez; a partir de los 60 años, la pendiente se agudiza de forma atípica, desplomándose hacia el grupo de edad avanzada (85 y más). Esta alteración e inclinación pronunciada al final de la vida es la evidencia demográfica de cómo disminuyo de manera fuerte los años de vida en las mujeres.
+
+## Esperanza de vida Hombres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+espe_h <- plot_log(tabla_vida_hombres, "ex",
+  "Esperanza de vida (ex) — Hombres CDMX", color_linea = "blue")
+print(espe_h)
+```
+
+### Análisis
+
+La gráfica de la esperanza de vida restante para la población masculina de la Ciudad de México expone con total crudeza la gravedad con la que el exceso de mortalidad afectó a los varones. Desde el punto de origen en la edad cero, la curva de los hombres se encuentra visiblemente desplazada hacia abajo en el eje vertical en comparación con la femenina, confirmando una brecha de género histórica que se ensanchó de forma desproporcionada debido a los problemas externos que siguen a los hombres. A diferencia del perfil de las mujeres, la esperanza de vida de los hombres no mantiene una curvatura suave ni cóncava durante la adultez; en su lugar, adopta una pendiente descendente casi lineal y sumamente empinada desde los 20 años. Este comportamiento describe un entorno de desgaste acelerado. Finalmente, al llegar a los 70 años, la curva masculina experimenta un colapso que se hunde en los valores mínimos hacia el tramo final abierto (85 y más). Este colapso de la estructura biológica de los hombres de la tercera edad en la capital, demostrando que la cohorte geriatra masculina fue el sector que recibió el impacto más destructivo y restrictivo en su expectativa de años futuros durante ese periodo.
+
+## Comparativa Esperanza de vida Hombres y Mujeres
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+espe_m <- plot_log(tabla_vida_mujeres, "ex", "", color_linea = "pink") + 
+  labs(title = "Mujeres")
+
+espe_h <- plot_log(tabla_vida_hombres, "ex", "", color_linea = "blue") + 
+  labs(title = "Hombres")
+
+comparativa_ex <- (espe_m + espe_h) + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Esperanza de vida (ex)",
+    subtitle = "Comparativa por sexo en CDMX"
+  )
+
+print(comparativa_ex)
+
+
+```
+
+## Esperanza de vida al nacer y probabilidad de morir con y sin homicidios, por sexo.
+
+![Probabilidades de morir para las mujeres de CDMX con y sin homicidio como causa de muerte.](images/Probabilidad%20de%20morir%20muejeres%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
+
+![Probabilidades de morir para los hombres de CDMX con y sin homicidio como causa de muerte.](images/Probabilidad%20de%20morir%20hombres%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
+
+![Esperanzas de vida al nacer para la población de CDMX con y sin homicidio como causa de muerte.](images/Esperanza%20de%20vida%20al%20nacer%20con%20y%20sin%20homicidio%20como%20causa%20de%20muerte.JPG)
+
+## ¿Por qué la tasa de reemplazo es igual a 2.1?
+
+En demografía, el análisis de la estructura por sexo y la capacidad de autorreemplazo de una población se apoya en indicadores clave como el SRB y el GRR.
+
+**SRB** (Sex Ratio at Birth) es la **Razón de Masculinidad al Nacer**. Es la relación entre el número de nacimientos de varones y el número de nacimientos de niñas en un período y territorio determinado.
+
+$$SRB = \frac{\text{Nacimientos de varones}}{\text{Nacimientos de niñas}}$$
+
+A nivel mundial, este valor es sumamente estable y oscila entre $1.05$ y $1.06$ (es decir, nacen aproximadamente 105 o 106 niños por cada 100 niñas).
+
+### GRR (Gross Reproduction Rate)
+
+**GRR** (Gross Reproduction Rate) es la **Tasa Bruta de Reproducción**. Representa el número promedio de hijas que una mujer tendría a lo largo de su vida reproductiva si experimentara las tasas de fecundidad por edad de un año específico y sobreviviera hasta el final de su período fértil.
+
+A diferencia de la Tasa Global de Fecundidad (TFR), que cuenta todos los nacimientos, la GRR se enfoca únicamente en el reemplazo femenino:
+
+$$GRR \approx TFR \times \left( \frac{1}{1 + SRB} \right)$$
+
+Para que una población se reemplace a sí misma, cada mujer debe dejar en promedio una hija que sobreviva hasta la edad reproductiva.
+
+Este equilibrio se mide a través de la **NRR** (Net Reproduction Rate / **Tasa Neta de Reproducción**). El nivel de reemplazo estricto exige que:
+
+$$NRR = 1$$
+
+La relación matemática que conecta la reproducción neta con la fecundidad global y la supervivencia es:
+
+$$NRR = TFR \times \left( \frac{1}{1 + SRB} \right) \times p(A_m)$$
+
+Donde:
+
+-   $TFR$: Tasa Global de Fecundidad.
+
+-   $\frac{1}{1 + SRB}$: Proporción de nacimientos que son niñas.
+
+-   $p(A_m)$: Probabilidad de que una niña sobreviva desde el nacimiento hasta la edad media de la maternidad (aproximadamente entre los 25 y 30 años).
+
+Para demostrar el valor de $2.1$, se utilizan los supuestos demográficos estándar para poblaciones con baja mortalidad:
+
+1.  **Factor Biológico (SRB):** Se asume un valor de $SRB = 1.05$. Por lo tanto, la proporción de niñas al nacer es: $$\frac{1}{1 + 1.05} = \frac{1}{2.05} \approx 0.4878$$ (Aproximadamente el 48.78% de los nacimientos son mujeres).
+
+2.  **Factor de Supervivencia (**$p(A_m)$**):** En condiciones de salud modernas, la probabilidad de que una recién nacida alcance la edad reproductiva es muy alta. Asumiremos un estándar del $97.5\%$: $$p(A_m) = 0.975$$
+
+Sustituyendo los valores fijos en la ecuación de reemplazo ($NRR = 1$):
+
+$$1 = TFR \times 0.4878 \times 0.975$$
+
+Multiplicando las constantes del miembro derecho:
+
+$$1 = TFR \times 0.4756$$
+
+Despejando la $TFR$:
+
+$$TFR = \frac{1}{0.4756}$$
+
+$$TFR \approx 2.1025$$
+
+Por lo tanto, la **Tasa de Reemplazo** es igual a 2.1
+
+## Indicadores de fecundidad y reproducción en la CDMX
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+library(readxl)
+library(dplyr)
+
+# Cargamos los datos
+ruta <- "C:/Users/Admin/Desktop/Rafa/Proyecto final demografía/Demography_9219/data/Datos tasas CDMX 2010 2019.xlsx"
+df <- read_excel(ruta)
+
+# Definimos la función para calcular las tasas
+calcular_tasas <- function(df, poblacion_col, nacimientos_col) {
+  
+  # Calculamos TEFE (fx = Nacimientos / Poblacion)
+  df <- df %>%
+    mutate(fx = !!sym(nacimientos_col) / !!sym(poblacion_col))
+  
+  # TGF = 5 * suma(fx)
+  tgf <- 5 * sum(df$fx)
+  
+  # TBR = TGF * proporcion_ninas (0.488 estándar demográfico)
+  tbr <- tgf * 0.488
+  
+  return(list(TGF = tgf, TBR = tbr))
+}
+
+# Calculamos para 2010 y 2019
+tasas_2010 <- calcular_tasas(df, "Pob2010", "Nac2010")
+tasas_2019 <- calcular_tasas(df, "Pob2019", "Nac2019")
+
+
+
+#print(paste("TGF 2010:", round(tasas_2010$TGF, 3)))
+#print(paste("TBR 2010:", round(tasas_2010$TBR, 3)))
+#print(paste("TGF 2019:", round(tasas_2019$TGF, 3)))
+#print(paste("TBR 2019:", round(tasas_2019$TBR, 3)))
+
+
+#2019
+# (nacimientos / población)
+fx_calculado_2019 <- (df$Nac2019 / df$Pob2019)
+
+# Calculamos la proporción de niñas (0.488 es el estándar)
+nacimientos_ninas_2019 <- fx_calculado_2019 * 0.488
+
+
+# Cálculo final de TNR 
+tnr_2019 <- 5 * sum(nacimientos_ninas_2019*tabla_vida_mujeres$px[5:11])
+
+
+
+#print(paste("TNR 2019:", round(tnr_final, 4)))
+
+# Resultados
+library(knitr)
+library(kableExtra)
+
+# Creamos el data.frame con los resultados
+resumen_fecundidad <- data.frame(
+  Indicador = c("Tasa Global de Fecundidad (TGF)", 
+                "Tasa Bruta de Reproducción (TBR)", 
+                "Tasa Neta de Reproducción (TNR)"),
+  `2010` = c(tasas_2010$TGF, tasas_2010$TBR, NA),
+  `2019` = c(tasas_2019$TGF, tasas_2019$TBR, tnr_2019)
+)
+
+# Imprimimod la tabla 
+resumen_fecundidad %>%
+  kable(caption = "Indicadores de Fecundidad y Reproducción en la CDMX",
+        col.names = c("Indicador", "2010", "2019"),
+        digits = 4,
+        align = "l") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+## Análisis
+
+Notemos que la **TGF** disminuye de de 2.0788 (2010) a 1.7456 (2019), lo cual es una diferencia significativa. Este descenso ubica a la CDMX por debajo del nivel de reemplazo (2.1 hijos por mujer), lo cual es característico de sociedades metropolitanas donde predomina la planificación familiar, la postergación de la maternidad y la inserción de las mujeres en el mercado laboral y educativo.
+
+La **TBR** también disminuye de1.0145 a 0.8518, lo que significa que, de mantenerse las condiciones actuales, la siguiente generación de mujeres será menor que la generación actual.
+
+Por último, la diferencia mínima entre la **TBR** (0.8518) y la **TNR** (0.8470) indica que la probabilidad de sobrevivir hasta la edad reproductiva en la CDMX es muy alta. Esto significa que casi todas las niñas que nacen sobreviven, y que la baja reproducción se debe a la decisión de no tener hijos y no a una mortalidad prematura.
+
+## Tasas Específicas de Fecundidad (TEFE) de CDMX, México y de Dinamarca para 2019
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, eval=TRUE}
+# Cargamos las librerías necesarias 
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+ruta_excel <- "C:/Users/Admin/Desktop/Rafa/Proyecto final demografía/Demography_9219/data/WPP2024_FERTILITY_RATES_DENMARK_MEXICO.xlsx"
+
+# Añadimos los datos del excel 
+datos_dinamarca <- read_excel(ruta_excel, sheet = "Dinamarca", skip = 1) %>% 
+  mutate(Territorio = "Dinamarca")
+
+datos_mexico <- read_excel(ruta_excel, sheet = "Mexico", skip = 1) %>% 
+  mutate(Territorio = "México") # Sugerencia: Añadido acento para coincidir con la gráfica
+
+datos_cdmx <- read_excel(ruta_excel, sheet = "CDMX", skip = 1) %>% 
+  mutate(Territorio = "Ciudad de México")
+
+# Agregamos los grupos donde tiene sentido 
+
+grupos_validos <- c("15-19","20-24","25-29","30-34","35-39","40-44","45-49")
+
+# Gráfica 
+
+datos_grafica <- bind_rows(datos_dinamarca, datos_mexico, datos_cdmx) %>% 
+  filter(Edad %in% grupos_validos) %>% 
+  mutate(Edad = factor(Edad, levels = grupos_validos))
+
+ggplot(datos_grafica, aes(x = Edad, y = TEFE,
+                          color = Territorio, group = Territorio)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c(
+    "Ciudad de México" = "lightgreen",
+    "México"           = "red",       # Ahora coincide perfectamente con el mutate de arriba
+    "Dinamarca"        = "lightblue"
+  )) +
+  labs(
+    title    = "Tasas Específicas de Fecundidad (TEFE)",
+    subtitle = "Comparativa: CDMX, México y Dinamarca (2019)",
+    x        = "Grupo de edad de la madre",
+    y        = "Nacimientos por cada 1,000 mujeres",
+    color    = "Área geográfica",
+    caption  = "Fuente: ONU (WPP 2024) y CONAPO"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position  = "bottom",
+    plot.title       = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle    = element_text(hjust = 0.5),
+    panel.grid.minor = element_blank()
+  )
+```
+
+## Análisis
+
+**Tasa Especifica de Fecundidad 2019 – Dinamarca**
+
+Para comenzar este análisis vamos a tomar a Dinamarca que es un país soberano miembro de la Unión Europea, ubicado en el norte de Europa e integrado por la península de Jutlandia y más de 400 islas. Su capital y ciudad más poblada es Copenhague. El Reino incluye además a Groenlandia y las Islas Feroe. Con una población cercana a los 6 millones de habitantes, el país destaca a nivel global por su excelente calidad de vida, su sólido estado de bienestar y su alto nivel de confianza social, posicionándose frecuentemente entre los países más felices del mundo, Ahora hablaremos de el comportamiento de la fecundidad dansa para el año 2019, donde podremos observar los principales efectos de la trancisión demografica.
+
+-   Desplazamiento del Pico de Fecundidad (Grupo 30-34 años):Para la edad de 30 a 34 años tenemos el hallazgos más importantes en 2019 considerandose el año donde en este grupo de edad concentró el mayor pico de fecundidad. Este fenómeno contrasta drasticamente con decadas anteriores, donde se ve de manera estadistica que la Tasa Especifica de Fecundidad se está moviendo hacía la derecha, es decir, que está cayendo entre las edades más jovenes y está aumentando en las edades de este grupo de edad (30 – 34 años),evidenciando que la tendencia que las mujeres danesas están posponiendo el primer hijo hasta estabilizar su situación económica y profesional.
+
+-   Contracción en las Edades Jóvenes (Grupo 20-24 años): En el grupo de edad de 20 a 24 años era donde si tomamos datos historicos podemos observar que se concentraba el mayor pico de fecundidad. Si bien en 2019 siguió siendo uno de los grupos de edad que aportan de manera significatival volumen en la fecundidad, ya no representan el principal y mantienen una tendencia sostenida a la baja, está prolongación es debido a la formación universitaria y el inicio al mundo laboral.
+
+-   Erradicación de la Fecundidad Adolescente (Grupo 15-19 años): La fecundidad adolecente muestra niveles extremadamente bajos. Este comportamiento representa uno de los mayores logros para Dinamarca puesto que el embarazo adolescente está prácticamente erradicado debido al acceso universal a educación sexual y métodos anticonceptivos. Los hallazgos mencionados anteriormente de las Tasas Especificas de Fecundidad altera de manera directa los indicadores demograficos del país, donde el pico de la fecundidad está a partir del grupo de edad de 30 a 34 a Edad Media a la Maternidad se ha elevado significativamente, ubicándose de manera aproximada en los 31.3 años en 2019 (y rozando los 30 años para el nacimiento del primer hijo), lo cual esto indica que la Tasa Global de Fecundidad para Dinamarca está demasiado baja registrando un 1.70 en 2019. Sin embargo, cabe destacar que, a pesar de ser una tasa baja para el crecimiento natural autónomo, el 1.70 de Dinamarca se mantenía competitivo y por encima del promedio general de la Unión Europea, sostenido en gran medida por sus robustas políticas de conciliación familiar.
+
+**Tasa Especifica de Fecundidad 2019 – CDMX**
+
+Para CDMX ya conocemos un poco más del contexto social y demografico que está asociado a este estado entonces podemos comenzar a realizar un analisis y de manera visual podemos decir qu es la que muestra una curva de fecundidad muy baja, puede deberse a aspectos importantes como lo son que el tamaño de la pobación que estamos comparando para esta entidad federativa. La Ciudad de México presenta el comportamiento característico de una metrópoli en su transición demográfica. A diferencia del patrón nacional, la curva de la CDMX en 2019 no muestra un pico pronunciado y temprano, sino una cúspide ensanchada que se distribuye de manera homogénea entre los 20 y los 29 años. Los principales hallazgos en la estructura por edad son los siguientes:
+
+-   Principal bloque reproductivo (Grupos 20-24 y 25-29 años):Podemos observar que aunque si hay una muy pequeña subida en el grupo de edad de 20 a 24 es muy ligera y se mantiene casi identicas a la de 25 y 29 años.Esto demuestra que la fecundidad de CDMX se mantiene uniforme a lo largo de todo ese grupo de edad, dejando de lado que en el modelo tradicional la concentración en la juventud temprana
+
+-   Transición a la Fecundidad (Grupo 30-34 años):Podemos observar que a partir de los 30 años, la Tasa Especifica de Fecundidad a partir de la edad 30 comienza a tener un descenso que aunque si muestra que en contraste a la década previa ese decenso de igual forma sigue aportando de manera significativa, reflejo de que aunque una parte del sector de la población posterge su maternidad debido a distintos factores como lo son la educación y el asentamiento laboral hay otra parte más grande que tienen su edad a edades más jovenes.
+
+-   Fecundidad adolescente(Grupo de 15 a 19 años): Podemos notar que el inicio de la curva que representa el grupo de edad adolescente para la edad de 15 a 19 años esta cerca de los 45 nacimientos que si bien no representa una cifra alarmante, es algo que se debe buscar seguir reduciendo con políticas publicas como lo son la educación sexual y métodos anticonceptivos, esto con el fin de mejorar significativamente la fecundidad adolescente de la entidad federativa. Este aplanamiento y compresión de las tasas específicas explican por qué la Ciudad de México se consolidó en 2019 como la entidad con la menor fecundidad de todo el país. Este comportamiento representa una Tasa Global de Fecundidad (TGF) estimada de 1.5 hijos por mujer, un valor que se encuentra muy por debajo del nivel de reemplazo generacional y que acelera el proceso de envejecimiento poblacional en la capital.
+
+**Tasa Especifica de Fecundidad 2019 – México**
+
+México (oficialmente Estados Unidos Mexicanos) es un país soberano ubicado en la parte meridional de América del Norte. Limita al norte con los Estados Unidos y al sureste con Guatemala y Belice, contando con extensas costas en el Océano Pacífico, el Golfo de México y el Mar Caribe. Es una república federal integrada por 32 entidades federativas. México presenta la silueta clásica de un régimen demográfico con cúspide temprana. La curva muestra un ascenso acelerado en las edades jóvenes, concentrando la mayor parte de la reproducción al inicio de la vida fértil de las mujeres, para luego descender de manera constante y lineal.
+
+-   El Pico de Fecundidad (Grupo 20-24 años): Este intervalo representa el pico más alto del país en el año del 2019, alcanzando su valor más alto con más de 110 nacimientos por cada 1,000 mujeres. Nuevamente este dato refleja que a escala social México determina una dinámica donde la maternidad comienza en las edades más fertiles de la mujer, esto se debe a que de manera mayoritaria la maternidad comienza en la juventud temprana.
+
+-   Transición Estable (Grupo 25-29 años): Podemos ver que en está edad la curva empieza a decrecer de manera moderada ya que sigue manteniendose por encima de los 100 nacimientos. Aunque no es el que aporta mayor volumen en la tasa de fecundidad es el que mantiene la segunda aportación más grande en la Tasa Especifica de Fecundidad del país.
+
+-   Fecundidad en edades avanzadas (Grupos 30-34 y 35-39 años):A partir del siguiente grupo de edad, registra aproximadamente de 75 a 40 nacimientos en el rango de edad de 30 a 39 años. Esto nos dice que la reproducción decae con mucha fuerza conforme a la edad, lo que quiere decir que hay una maternidad bastante tardía pero no en muchos casos, lo que refleja que muy pocas mujeres en México esperan a tener una vida estable, trabajo, vivienda, etc . para poder ejercer la maternidad.
+
+-   Fecundidad Adolescente (Grupo 15-19 años): El inicio de la curva es uno de los puntos más críticos del análisis nacional. México arranca con una tasa más altas en comparación con Dinamarca, superando los 60 nacimientos por cada 1,000 adolescentes, lo que visibiliza que México representa uno de los problemas más fuertes en cuanto al embarazo adolescente que debería de erradicarse con una politica que lleve a cabo la visibilisación del problema así como la propagación de métodos anticonceptivos para adolescentes. La estructura de la curva nacional en 2019 explica por qué el país, a pesar de estar en un proceso continuo de descenso de la natalidad, se mantenía en niveles cercanos al reemplazo generacional. Este volumen concentrado en las edades de 15 a 29 años se tradujo en una Tasa Global de Fecundidad (TGF) para México de aproximadamente 2.0 hijos por mujer en ese año, situándose justo en el promedio de la transición demográfica de la región latinoamericana, pero con el reto latente de descentralizar las oportunidades para mitigar la alta fecundidad en las cohortes más jóvenes.
+
+**Estudio Comparativo**
+
+**Adolescente (15-19 años)**:
+
+-   Dinamarca: Muestra niveles bajos; el embarazo adolescente está prácticamente erradicado debido al acceso universal a educación sexual y métodos anticonceptivos.
+
+-   La CDMX: Se sitúa en un punto intermedio, cerca de los 45 nacimientos por cada 1,000 mujeres, una cifra no alarmante pero que se buscan crear políticas públicas para seguir reduciendo el embarazo adolesecnte de manera efectiva.
+
+-   México: presenta su punto más crítico aquí, superando los 60 nacimientos por cada 1,000 adolescentes, lo que visibiliza un fuerte problema social que requiere políticas de visibilización y distribución de anticonceptivos, así como informar de manera acertiva las consecuencias.
+
+**Grupo de 20-24 años:**
+
+-   En México: Este grupo representa el pico más alto de fecundidad de todo el país, superando los 110 nacimientos por cada 1,000 mujeres, debido a una dinámica social donde la maternidad del país se ejerce mayoritariamente en la juventud temprana.
+
+-   En la CDMX: La curva muestra una muy ligera subida en esta edad, pero se mantiene casi idéntica al siguiente grupo de edad.
+
+-   En Dinamarca: Este grupo ha tenido una baja en comparación con sus datos históricos debido a que las mujeres danesas muestran intereses en la educación y el iinicio al mundo laboral.
+
+**Grupo de 25-29 años:**
+
+-   En México: La curva empieza a decrecer de manera moderada, manteniéndose por encima de los 100 nacimientos, siendo la segunda mayor aportación al volumen del país, diciendo nuevamente que la dinamica se presta a que las mujeres jovenes ejercen su maternidad a edades tempranas.
+
+-   En la CDMX: Este grupo forma, junto con el de 20-24 años, un principal bloque reproductivo uniforme, dejando de lado el modelo tradicional de concentración temprana que está peresente en la mayoría de los Estados de México.
+
+-   En Dinamarca: Este grupo ha tenido una alza lo contrario a lo que habíamos visto en CDMX y México , diciendo de manera acertada lo que se había estado diciendo que las mujeres danesas esperan a tener una edad más avanzada con mejor educación y mayores oportunidades laborales.
+
+**Grupo de 30-34 años:**
+
+-   Dinamarca: Su pico máximo de fecundidad. La curva estadística se ha movido por completo hacia la derecha, demostrando que las mujeres danesas posponen el primer hijo hasta estabilizar su situación económica y profesional.
+
+-   CDMX: Experimenta un descenso de la fecundidad; aunque el grupo sigue aportando a la población que posterga la maternidad por razones laborales y educativas, la mayor parte de la población ya tuvo sus hijos en edades más jóvenes.
+
+-   México: La curva cae drásticamente en este rango (registrando entre 75 y 40 nacimientos junto con el grupo de 35-39 años), confirmando que hay muy poca maternidad tardía y que pocas mujeres esperan a tener una vida totalmente estable (vivienda, trabajo) para ejercerla.

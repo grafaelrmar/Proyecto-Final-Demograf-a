@@ -1,5 +1,0 @@
-"0",""
-"0","for(i in 1:4) {"
-"0","  # Uniforme(0,1) es equivalente a Beta(1,1)"
-"0","  graficar_corte(cortes_k[i], n_acumulado[i], 1, 1, paste(""Corte"", i, ""No Informativa""))"
-"0","}"

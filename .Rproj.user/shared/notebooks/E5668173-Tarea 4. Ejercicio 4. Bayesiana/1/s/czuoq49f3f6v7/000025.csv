@@ -1,3 +1,0 @@
-"0","# Extraemos muestras de stan para comparar"
-"0","stan_p <- extract(fit)$p"
-"0","lines(density(stan_p), col=""blue"", lty=2, lwd=2)"
